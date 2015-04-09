@@ -1,0 +1,94 @@
+.cork-it-tag {
+
+    display: block;
+    overflow: hidden;
+    padding: 0.5em;
+    line-height: 1em;
+    background-color: #efefef;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    &.cork-is-selected {
+        color: white;
+        background-color: #598cfc;
+
+        &.cork-will-delete {
+            color: white;
+            background-color: #fa2e2e;
+        }
+    }
+}
+
+.cork-input-tags-control, .cork-input-tags-results {
+
+    .cork-icon {
+        line-height: 2em;
+        width: 2em;
+        text-align: center;
+    }
+    .cork-icon-text {
+        display: none;
+    }
+}
+
+.cork-it-remove-btn {
+
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+
+    .cork-icon-text {
+        display: none;
+    }
+
+    &:hover, &:active {
+        opacity: 1;
+    }
+}
+
+.cork-input-tags-control {
+
+    .cork-it-tag {
+        position: relative;
+        float: left;
+        margin: 0 0.5em 0.5em 0;
+    }
+
+    .cork-it-label {
+        float: left;
+        margin-right: 1em;
+    }
+}
+
+.cork-it-add-icon {
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.8;
+
+    .cork-icon-text {
+        display: none;
+    }
+
+    &:hover, &:active {
+        opacity: 1;
+    }
+}
+
+.cork-input-tags-results {
+
+    .cork-it-tag {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .cork-it-label {
+        margin-right: 1em;
+    }
+}

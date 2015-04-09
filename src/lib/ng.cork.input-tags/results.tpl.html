@@ -1,0 +1,12 @@
+<div class="cork-input-tags-results">
+    <div class="cork-it-tag" ng-repeat="tag in results"
+        ng-class="{'cork-is-selected': selIx === $index}" ng-click="tagClick(tag)">
+        <div class="cork-it-add-icon">
+            <i class="cork-icon fa fa-plus"></i>
+            <span class="cork-icon-text">add</span>
+        </div>
+        <div class="cork-it-label">
+            <div class="cork-it-content" ng-include="opts.tpl.result"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+@ngdoc overview
+@name Basic Usage
+@description
+
+## Directive: [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags)
+
+> Basic usage.
+
+<doc:example module="app" height="400">
+    <doc:source>
+        <script>
+        angular.module('app', ['ng.cork.input-tags'])
+        .service('mockTagService', [
+            function () {
+
+                var mockTags = [{
+                    id: 'foo',
+                    label: 'Foo'
+                }, {
+                    id: 'bar',
+                    label: 'Bar'
+                }, {
+                    id: 'baz',
+                    label: 'Baz'
+                }, {
+                    id: 'qux',
+                    label: 'Qux'
+                }, {
+                    id: 'quux',
+                    label: 'Quux'
+                },{
+                    id: 'lorem',
+                    label: 'Lorem ipsum dolor sit amet'
+                }];
+
+                return function (terms) {
+                    var ret = [];
+                    terms = terms.toLowerCase();
+                    for (var ix = 0; ix < mockTags.length; ix++) {
+                        if (mockTags[ix].label.toLowerCase().indexOf(terms) !== -1) {
+                            ret.push(mockTags[ix]);
+                        }
+                    }
+                    return ret;
+                };
+            }
+        ])
+        .controller('exampleCtrl', [
+            '$scope',
+            'mockTagService',
+            function ($scope, mockTagService) {
+                $scope.tags = [];
+                $scope.tagOptions = {
+                    minLength: 2,
+                    searchFn: mockTagService
+                };
+            }
+        ]);
+        </script>
+        <style>
+        .container {
+           padding: 10px;
+        }
+        .form-group {
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed black;
+        }
+        </style>
+        <div data-ng-controller="exampleCtrl" class="container">
+            <div class="form-group">
+                <label>Tags</label>
+                <div cork-input-tags cork-options="tagOptions" ng-model="tags"></div>
+            </div>
+        </div>
+    </doc:source>
+</doc:example>

@@ -1,0 +1,50 @@
+@ngdoc overview
+@name ng.cork.deep.path
+@description
+
+> Provides a service to get/set/delete object properties by path.
+
+# Dependencies
+
+- None.
+
+
+# Usage
+
+Add this module as a dependency of your modules.
+
+<pre>
+angular.module('app', ['ng.cork.deep.path']);
+</pre>
+
+**NOTE:** this is a partial module. Use `ng.cork.deep` instead to include the entire library.
+
+
+## Service: [corkDeepPath](#/api/ng.cork.deep.path.corkDeepPath)
+
+> Modify deep properties of an object.
+
+<pre>
+angular.module('app', ['ng.cork.deep.path'])
+.controller('myController', [
+    'corkDeepPath',
+    function (corkDeepPath) {
+
+        var obj = {
+            foo: {
+                bar: 'baz'
+            }
+        };
+
+        corkDeepPath.get(obj, 'foo.bar'); // 'baz'
+        corkDeepPath.get(obj, 'foo.foo'); // Error()
+        corkDeepPath.get(obj, 'foo.foo', 'default value'); // 'default value'
+
+        corkDeepPath.set(obj, 'foo.bar', 'replaced'); // obj.foo.bar = 'replaced'
+        corkDeepPath.set(obj, 'foo.qux', 'new value'); // obj.foo.qux = 'new value'
+        corkDeepPath.set(obj, 'abc.def', 'new property'); // obj.abc.def = 'new property'
+
+        corkDeepPath.del(obj, 'foo'); // obj.foo = undefined, obj = {baz: [101]}
+    }
+])
+</pre>

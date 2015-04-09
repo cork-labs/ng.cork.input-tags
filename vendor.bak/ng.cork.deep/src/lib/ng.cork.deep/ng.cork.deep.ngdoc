@@ -1,0 +1,26 @@
+@ngdoc overview
+@name ng.cork.deep
+@description
+
+> Main module, bundling all the classes and utils.
+
+# Dependencies
+
+- **[ng.cork.deep.extend](#/api/ng.cork.deep.extend)** - Provides a function that deep extends one object with another.
+- **[ng.cork.deep.obj](#/api/ng.cork.deep.obj)** - Provides a base class with deep get/set/delete methods.
+- **[ng.cork.deep.path](#/api/ng.cork.deep.path)** - Provides a service to get/set/delete object properties by path.
+
+
+# Usage
+
+Add this module as a dependency of your modules.
+
+<pre>
+angular.module('app', ['ng.cork.deep']);
+</pre>
+
+**NOTE:** Use this module as a dependency if you are using the entire library.
+
+You may otherwise wish to include just the modules you are using.
+
+See {@link #/guide Guide} to learn about file cherry-picking.

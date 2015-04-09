@@ -1,0 +1,48 @@
+@ngdoc overview
+@name ng.cork.ui.keys
+@description
+
+> AngularJS service to normalize key codes across browsers and match keys by tag.
+
+# Dependencies
+
+- None.
+
+
+# Usage
+
+## Service: {@link ng.cork.ui.keys.corkUiKeyCodes corkUiKeyCodes} Configuration
+
+Group key codes by tags during the config phase of the application via the {@link ng.cork.ui.keys.corkUiKeysProvider corkUiKeysProvider}.
+
+<pre>
+angular.module('app', ['ng.cork.ui.keys'])
+.config([
+    'corkUiKeysCodes',
+    'corkUiKeysProvider',
+    function (keyCodes, corkUiKeysProvider) {
+        var config = {
+            tags = {
+                upDown: [keyCodes.PageUp, keyCodes.PageDown]
+            }
+        };
+        corkUiKeysProvider.configure(config);
+    }
+])
+</pre>
+
+
+## Service: {@link ng.cork.ui.keys.corkUiKeyCodes corkUiKeyCodes}
+
+Normalize key events and check if key "is" of a certain tag, using the {@link ng.cork.ui.keys.corkUiKeys corkUiKeys} service by injecting it into your controllers or services.
+
+<pre>
+angular.module('app', ['ng.cork.ui.keys'])
+.service(['yourService', function (corkUiKeys) {
+    element.bindEventListener('keypress', function (ev) {
+        var code = corkUiKeys.getCode(ev);
+        var isUpDown = corkUiKeys.is('upDown', code);
+    });
+}])
+</pre>
+

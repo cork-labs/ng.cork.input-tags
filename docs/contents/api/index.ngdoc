@@ -1,0 +1,15 @@
+@ngdoc overview
+@name API Reference
+@description
+
+# ng.cork.input-tags API Reference
+
+> Welcome to the **ng.cork.input-tags** API reference.
+
+If you want to know how **ng.cork.input-tags** works, checkout the {@link guide/ guide} and the {@link demos/ demos}.
+
+
+## Modules
+
+- **[ng.cork.input-tags](#/api/ng.cork.input-tags)** - Provides a configurable service that divides numbers by X, as well as a directive and a filter.
+

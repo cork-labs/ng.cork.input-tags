@@ -1,0 +1,51 @@
+@ngdoc overview
+@name ng.cork.deep.obj<
+@description
+
+> Provides a base class with deep get/set/delete methods.
+
+# Dependencies
+
+- **[ng.cork.deep.path](#/api/ng.cork.deep.path)** - Provides a service to get/set/delete object properties by path.
+
+
+# Usage
+
+Add this module as a dependency of your modules.
+
+<pre>
+angular.module('app', ['ng.cork.deep.obj']);
+</pre>
+
+**NOTE:** this is a partial module. Use `ng.cork.deep` instead to include the entire library.
+
+
+## Factory: [CorkDeepObj](#/api/ng.cork.deep.obj.CorkDeepObj)
+
+> Defaults one object with properties from another.
+
+<pre>
+angular.module('app', ['ng.cork.deep.obj'])
+.controller('myController', [
+    'CorkDeepObj',
+    function (CorkDeepObj) {
+
+        var obj = new CorkDeepObj({
+            foo: {
+                bar: 'baz'
+            },
+            baz: [101]
+        });
+
+        obj.get('foo.bar'); // 'baz'
+        obj.get('foo.foo'); // Error()
+        obj.get('foo.foo', 'default value'); //  obj.foo.foo = 'default value'
+
+        obj.set('foo.bar', 'replaced'); // obj.foo.bar = 'replaced'
+        obj.set('foo.qux', 'new value'); // obj.foo.qux = 'new value'
+        obj.set('abc.def', 'new property'); // obj.abc.def = 'new property'
+
+        obj.del('foo'); // obj.foo = undefined, obj = {baz: [101]}
+    }
+])
+</pre>

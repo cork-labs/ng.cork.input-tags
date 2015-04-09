@@ -1,0 +1,53 @@
+@ngdoc overview
+@name ng.cork.input-tags
+@description
+
+> AngularJS component for tag input.
+
+# Dependencies
+
+- Service `cxGenerate`, provided by [bower:ng.cx.generate](https://github.com//ef-ctx/ng.cx.generate)
+- Service `corkThrottling`, provided by [bower:ng.cork.throttling](https://github.com//cork-labs/ng.cork.throttling)
+- Service `corkPubSub`, provided by [bower:ng.cork.pubsub](https://github.com//cork-labs/ng.cork.pubsub)
+- Service `corkUiKeys`, provided by [bower:ng.cork.ui](https://github.com//cork-labs/ng.cork.ui)
+- Directive `corkUiEnterClick`, provided by [bower:ng.cork.ui.enter-click](https://github.com//cork-labs/ng.cork.ui.enter-click)
+- Directive `corkUiFocusOn`, provided by [bower:ng.cork.ui.focus-on](https://github.com//cork-labs/ng.cork.ui.focus-on)
+- Directive `corkUiStopPropagation`, provided by [bower:ng.cork.ui.stop-propagation](https://github.com//cork-labs/ng.cork.ui.stop-propagation)
+
+
+# Usage
+
+Add the module as a dependency.
+
+<pre>
+angular.module('app', ['ng.cork.input-tags']);
+</pre>
+
+
+## Provider [corkInputTagsConfigProvider](#/api/ng.cork.input-tags.corkInputTagsConfigProvider)
+
+Use the provider to configure all instances of [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags),
+[cork-input-tags-control](#/api/ng.cork.input-tags.corkInputTagsControl) and
+[cork-input-tags-results](#/api/ng.cork.input-tags.corkInputTagsResults)
+
+<pre>
+angular.module()
+.config([
+    'corkInputTagsConfigProvider',
+    function (corkInputTagsConfigProvider) {
+        var options = {
+            minChars: 2
+        };
+        corkInputTagsConfigProvider.configure(options);
+    }
+]);
+</pre>
+
+
+## Directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags)
+
+Add this directive to an element to render a tags form input field.
+
+<pre>
+<div cork-input-tags ng-model="myValue"><div>
+</pre>
