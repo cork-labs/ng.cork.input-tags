@@ -1,36 +1,33 @@
 @ngdoc overview
-@name Basic Usage
+@name Adding New Tags
 @description
 
-## Basic usage
+## Adding New Tags
 
-Simply provide a `searchFn` to directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
-
-Display:
-- model tags and text input are displayed inline
-- results are displayed as a drop-down under the text input
+Provide an `addFn` to directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
 
 Behaviour:
-- no new tags will be added
+- when there are no search results a new tag will be added when user presses Enter
 
 <pre>
 $scope.tagOptions = {
-    searchFn: function (terms) { ... }
+    searchFn: function (terms) { ... },
+    addFn: function (label) { ... }
 };
 </pre>
 
-The `searchFn` will be invoked with the search terms and, as per defaults,
-should return an array of tag objects with `id` and `label` attributes
-(or a promise resolved with the tag list).
+The `addFn` will be invoked with the user input and, as per defaults, should
+return a tag object with `id` and `label` attributes (or a promise resolved with
+the new tag).
 
 <pre>
-function search(terms) {
-    return [
-        {id: 1, label: 'Foo'},
-        {id: 2, label: 'Bar'}
-    ];
+function add(label) {
+    return {id: 3, label: label};
 }
 </pre>
+
+As long as the `addFn` returns (or resolves with) a tag object, the tag will be
+added to the model.
 
 <doc:example module="app" height="400">
     <doc:source>
@@ -69,6 +66,14 @@ function search(terms) {
                             }
                         }
                         return ret;
+                    },
+                    add: function (label) {
+                        var newTag = {
+                            id: mockTags.length + 1,
+                            label: label
+                        };
+                        mockTags.push(newTag);
+                        return newTag;
                     }
                 };
             }
@@ -79,7 +84,8 @@ function search(terms) {
             function ($scope, mockTagService) {
                 $scope.tags = [];
                 $scope.tagOptions = {
-                    searchFn: mockTagService.search
+                    searchFn: mockTagService.search,
+                    addFn: mockTagService.add
                 };
             }
         ]);
@@ -88,14 +94,14 @@ function search(terms) {
         .container {
            padding: 10px;
         }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
         .form-group {
             padding-bottom: 20px;
             margin-bottom: 20px;
             border-bottom: 1px dashed black;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
         }
         .meta {
             padding: 10px;

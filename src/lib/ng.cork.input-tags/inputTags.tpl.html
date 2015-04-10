@@ -1,0 +1,18 @@
+<ng-form name="form" class="cork-input-tags cork-input-tags-control" ng-class="{'cork-is-disabled': disabled, 'cork-it-results-block': opts.display.results === 'block', 'cork-it-results-inline': opts.display.results === 'inline', 'cork-it-tags-block': opts.display.tags === 'block', 'cork-it-tags-inline': opts.display.tags === 'inline'}">
+
+    <div ng-if="opts.display.tags !== 'hide'" cork-input-tags-tags ng-model="model" cork-uuid="{{UUID}}" cork-options="options" cork-disabled="disabled"></div>
+
+    <div class="cork-it-input-container">
+
+        <input class="form-control" type="text" ng-model="newLabel" placeholder="{{opts.placeholder}}"
+            ng-focus="onInputFocus()"
+            ng-keyup="onInputKeyUp($event)"
+            ng-keydown="onInputKeyDown($event)"/>
+
+        <div ng-if="opts.display.results !== 'hide'" class="cork-it-results-container">
+            <div cork-input-tags-results cork-uuid="{{UUID}}" cork-options="opts"></div>
+        </div>
+
+    </div>
+
+</ng-form>

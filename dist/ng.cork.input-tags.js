@@ -7,9 +7,9 @@
  */
 angular.module('ng.cork.input-tags.templates', []).run(['$templateCache', function($templateCache) {
 $templateCache.put("lib/ng.cork.input-tags/control.tpl.html",
-"<ng-form name=form class=cork-input-tags-control ng-class=\"{'cork-is-disabled': disabled}\"><div class=cork-it-list><div class=cork-it-tag ng-repeat=\"tag in model\" ng-class=\"{'cork-is-selected': selIx === $index, 'cork-will-delete': willDelete}\" title=\"Tag '{{tag[opts.attr.label]}}', press backspace to highlight this tag for removal, press left to select previous tag, press right to select next tag, press escape to return to the add tag input.\" ng-focus=onCursorFocus($index) ng-keydown=\"onCursorKeyDown($event, $index)\" ng-keyup=\"onCursorKeyUp($event, $index)\" ng-blur=onCursorBlur($index) cork-ui-focus-on=focus-cursor-{{$index}}><div class=cork-it-label><div class=cork-it-content ng-include=opts.tpl.label></div></div><button class=cork-it-remove-btn title=\"Tag '{{tag[opts.attr.label]}}', press backspace to remove tag, press left to select previous tag, press right to select next tag, press escape to return to the add tag input.\" ng-click=removeTag(tag) ng-focus=onRemoveBtnFocus($index) ng-keydown=\"onRemoveBtnKeyDown($event, $index)\" ng-blur=onRemoveBtnBlur($index) cork-ui-enter-click cork-ui-stop-propagation cork-events=\"['keydown']\" cork-ui-focus-on=focus-remove-btn-{{$index}}><i class=\"cork-icon fa fa-times\"></i> <span class=cork-icon-text>remove</span></button></div></div><input class=form-control ng-model=newLabel placeholder={{opts.placeholder}} ng-focus=onInputFocus() ng-keyup=onInputKeyUp($event) ng-keydown=onInputKeyDown($event) ng-blur=\"onInputBlur()\"></ng-form>");
+"<ng-form name=form class=cork-input-tags-control ng-class=\"{'cork-is-disabled': disabled}\"><div class=cork-input-tag-model><div class=cork-it-tag ng-repeat=\"tag in model\" ng-class=\"{'cork-is-selected': selIx === $index, 'cork-will-delete': willDelete}\" title=\"Tag '{{tag[opts.attr.label]}}', press backspace to highlight this tag for removal, press left to select previous tag, press right to select next tag, press escape to return to the add tag input.\" ng-focus=onCursorFocus($index) ng-keydown=\"onCursorKeyDown($event, $index)\" ng-keyup=\"onCursorKeyUp($event, $index)\" ng-blur=onCursorBlur($index) cork-ui-focus-on=focus-cursor-{{$index}}><div class=cork-it-label><div class=cork-it-content ng-include=opts.tpl.label></div></div><button class=cork-it-remove-btn title=\"Tag '{{tag[opts.attr.label]}}', press backspace to remove tag, press left to select previous tag, press right to select next tag, press escape to return to the add tag input.\" ng-click=removeTag(tag) ng-focus=onRemoveBtnFocus($index) ng-keydown=\"onRemoveBtnKeyDown($event, $index)\" ng-blur=onRemoveBtnBlur($index) cork-ui-enter-click cork-ui-stop-propagation cork-events=\"['keydown']\" cork-ui-focus-on=focus-remove-btn-{{$index}}><i class=\"cork-icon fa fa-times\"></i> <span class=cork-icon-text>remove</span></button></div></div><div class=cork-it-input-container><input class=form-control ng-model=newLabel placeholder={{opts.placeholder}} ng-focus=onInputFocus() ng-keyup=onInputKeyUp($event) ng-keydown=onInputKeyDown($event) ng-blur=\"onInputBlur()\"><div class=cork-it-results-container><div cork-input-tags-results cork-uuid={{uuid}} cork-options=opts></div></div></div></ng-form>");
 $templateCache.put("lib/ng.cork.input-tags/input.tpl.html",
-"<div class=cork-input-tags-input ng-class=\"{'cork-is-disabled': disabled}\"><div cork-input-tags-control cork-uuid={{uuid}} cork-options=opts ng-model=model></div><div class=cork-input-tags-results-container><div cork-input-tags-results cork-uuid={{uuid}} cork-options=opts></div></div></div>");
+"<div class=cork-input-tags-input ng-class=\"{'cork-is-disabled': disabled}\"><div cork-input-tags-control cork-uuid={{uuid}} cork-options=opts ng-model=model></div></div>");
 $templateCache.put("lib/ng.cork.input-tags/label.tpl.html",
 "<div>{{tag[opts.attr.label]}}</div>");
 $templateCache.put("lib/ng.cork.input-tags/result.tpl.html",
@@ -235,6 +235,11 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                      */
                     var opts = $scope.opts = corkDeepExtend(copy(config), $scope.options || {});
 
+                    $scope.foo = 'bar';
+
+                    console.log($scope.foo);
+                    console.log($scope.options);
+
                     var optionMinLength = opts.minLength;
                     var optionFnAdd = opts.addFn;
                     var optionAttrId = opts.attr.id;
@@ -268,19 +273,6 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                      * @var {boolean} enaled (by provided option OR because not bound) updated on updateEnabled()
                      */
                     $scope.enabled = false;
-
-                    /**
-                     * @var {object} opts relevant for the template
-                     */
-                    $scope.opts = {
-                        placeholder: null,
-                        attr: {
-                            label: optionAttrLabel
-                        },
-                        tpl: {
-                            label: optionTplLabel
-                        }
-                    };
 
                     /**
                      * @var {number} index of the tag currently selected in the model tag index (-1) if none
@@ -729,18 +721,6 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                      * @var {array} results filtered, with the usedTagsId removed
                      */
                     $scope.results = [];
-
-                    /**
-                     * @var {object} opts relevant for the template
-                     */
-                    $scope.opts = {
-                        attr: {
-                            label: optionAttrLabel
-                        },
-                        tpl: {
-                            result: optionTplResult
-                        }
-                    };
 
                     // -- private
 

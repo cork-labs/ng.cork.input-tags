@@ -1,35 +1,23 @@
 @ngdoc overview
-@name Basic Usage
+@name Blocky Results
 @description
 
-## Basic usage
+## Blocky Results
 
-Simply provide a `searchFn` to directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
+If you prefer to display the search results in a block (as opposite to a drop-down)
+you can provide the `display.results` option to directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
 
-Display:
-- model tags and text input are displayed inline
-- results are displayed as a drop-down under the text input
+> Displaying tags as a block:
 
-Behaviour:
-- no new tags will be added
+With `display.results: 'block'` - results are displayed as a full-width drop-down
 
 <pre>
 $scope.tagOptions = {
-    searchFn: function (terms) { ... }
+    searchFn: mockTagService.search,
+    display: {
+        results: 'block'
+    }
 };
-</pre>
-
-The `searchFn` will be invoked with the search terms and, as per defaults,
-should return an array of tag objects with `id` and `label` attributes
-(or a promise resolved with the tag list).
-
-<pre>
-function search(terms) {
-    return [
-        {id: 1, label: 'Foo'},
-        {id: 2, label: 'Bar'}
-    ];
-}
 </pre>
 
 <doc:example module="app" height="400">
@@ -79,7 +67,10 @@ function search(terms) {
             function ($scope, mockTagService) {
                 $scope.tags = [];
                 $scope.tagOptions = {
-                    searchFn: mockTagService.search
+                    searchFn: mockTagService.search,
+                    display: {
+                        results: 'block'
+                    }
                 };
             }
         ]);
@@ -88,14 +79,14 @@ function search(terms) {
         .container {
            padding: 10px;
         }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
         .form-group {
             padding-bottom: 20px;
             margin-bottom: 20px;
             border-bottom: 1px dashed black;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
         }
         .meta {
             padding: 10px;

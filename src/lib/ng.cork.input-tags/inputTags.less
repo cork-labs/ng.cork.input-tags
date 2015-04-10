@@ -1,25 +1,21 @@
-.cork-it-tag {
 
-    display: block;
-    overflow: hidden;
-    padding: 0.5em;
-    line-height: 1em;
-    background-color: #efefef;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+// -- mixins
 
-    &.cork-is-selected {
-        color: white;
-        background-color: #598cfc;
-
-        &.cork-will-delete {
-            color: white;
-            background-color: #fa2e2e;
-        }
+.clearfix() {
+    &:before,
+    &:after {
+        content: " "; // 1
+        display: table; // 2
+    }
+    &:after {
+        clear: both;
     }
 }
 
-.cork-input-tags-control, .cork-input-tags-results {
+
+// -- global
+
+.cork-input-tags {
 
     .cork-icon {
         line-height: 2em;
@@ -31,11 +27,50 @@
     }
 }
 
+.cork-it-tag {
+
+    display: block;
+    overflow: hidden;
+    padding: 0.5em;
+    line-height: 1em;
+}
+
+// -- tags
+
+.cork-input-tags-tags {
+
+    .cork-it-tag {
+        position: relative;
+        float: left;
+        margin: 0 0.5em 0.5em 0;
+        background-color: #efefef;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+
+        &.cork-is-selected {
+            color: white;
+            background-color: #598cfc;
+            &.cork-will-delete {
+                color: white;
+                background-color: #fa2e2e;
+            }
+        }
+    }
+
+    .cork-it-label {
+        float: left;
+        margin-right: 0.5em;
+    }
+}
+
 .cork-it-remove-btn {
 
-    position: absolute;
-    right: 0;
-    top: 0;
+    float: right;
+    position: relative;
+    top: -0.5em;
+    right: -0.5em;
+    margin-left: -1em;
+    margin-bottom: -1em;
     padding: 0;
     background: none;
     border: none;
@@ -51,16 +86,76 @@
     }
 }
 
+// -- control
+
 .cork-input-tags-control {
+    .clearfix();
+    display: block;
+
+    &.cork-it-tags-block {
+        .cork-it-input-container {
+            clear: both;
+        }
+        .form-control {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+
+    &.cork-it-tags-inline {
+        .cork-it-input-container {
+            float: left;
+        }
+    }
+
+    &.cork-it-results-block {
+        position: relative;
+
+    }
+
+    &.cork-it-results-inline {
+
+        .cork-it-input-container {
+            position: relative;
+        }
+    }
+
+    // 0px height div
+    // positioned the bottom of cork-it-results-container (if inline)
+    // or bottom of cork-input-tags-control (if block)
+    .cork-input-tags-results {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        background-color: #ffffff;
+    }
+
+    .cork-it-results-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+    }
+
+}
+
+// -- results
+
+.cork-input-tags-results {
 
     .cork-it-tag {
         position: relative;
-        float: left;
-        margin: 0 0.5em 0.5em 0;
+        cursor: pointer;
+
+        &.cork-is-selected {
+            color: white;
+            background-color: #598cfc;
+        }
     }
 
     .cork-it-label {
-        float: left;
         margin-right: 1em;
     }
 }
@@ -78,17 +173,5 @@
 
     &:hover, &:active {
         opacity: 1;
-    }
-}
-
-.cork-input-tags-results {
-
-    .cork-it-tag {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .cork-it-label {
-        margin-right: 1em;
     }
 }

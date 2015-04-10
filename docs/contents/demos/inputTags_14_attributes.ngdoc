@@ -1,35 +1,23 @@
 @ngdoc overview
-@name Basic Usage
+@name Custom Tag Attributes
 @description
 
-## Basic usage
+## Custom Tag Attributes
 
-Simply provide a `searchFn` to directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
+If your tag model contains different attributes you can provide `attr.id` and/or
+`attr.label` to directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
 
-Display:
-- model tags and text input are displayed inline
-- results are displayed as a drop-down under the text input
-
-Behaviour:
-- no new tags will be added
+Remember that `searchFn` and `addFn` should also return tag objects with these
+attributes.
 
 <pre>
 $scope.tagOptions = {
-    searchFn: function (terms) { ... }
+    searchFn: function (terms) { ... },
+    attr: {
+        id: 'key',
+        label: 'name'
+    }
 };
-</pre>
-
-The `searchFn` will be invoked with the search terms and, as per defaults,
-should return an array of tag objects with `id` and `label` attributes
-(or a promise resolved with the tag list).
-
-<pre>
-function search(terms) {
-    return [
-        {id: 1, label: 'Foo'},
-        {id: 2, label: 'Bar'}
-    ];
-}
 </pre>
 
 <doc:example module="app" height="400">
@@ -40,23 +28,23 @@ function search(terms) {
             function () {
 
                 var mockTags = [{
-                    id: 1,
-                    label: 'Foo'
+                    key: 1,
+                    name: 'Foo'
                 }, {
-                    id: 2,
-                    label: 'Bar'
+                    key: 2,
+                    name: 'Bar'
                 }, {
-                    id: 3,
-                    label: 'Baz'
+                    key: 3,
+                    name: 'Baz'
                 }, {
-                    id: 4,
-                    label: 'Qux'
+                    key: 4,
+                    name: 'Qux'
                 }, {
-                    id: 5,
-                    label: 'Quux'
+                    key: 5,
+                    name: 'Quux'
                 },{
-                    id: 6,
-                    label: 'Lorem ipsum dolor sit amet'
+                    key: 6,
+                    name: 'Lorem ipsum dolor sit amet'
                 }];
 
                 return {
@@ -64,7 +52,7 @@ function search(terms) {
                         var ret = [];
                         terms = terms.toLowerCase();
                         for (var ix = 0; ix < mockTags.length; ix++) {
-                            if (mockTags[ix].label.toLowerCase().indexOf(terms) !== -1) {
+                            if (mockTags[ix].name.toLowerCase().indexOf(terms) !== -1) {
                                 ret.push(mockTags[ix]);
                             }
                         }
@@ -79,7 +67,11 @@ function search(terms) {
             function ($scope, mockTagService) {
                 $scope.tags = [];
                 $scope.tagOptions = {
-                    searchFn: mockTagService.search
+                    searchFn: mockTagService.search,
+                    attr: {
+                        id: 'key',
+                        label: 'name'
+                    }
                 };
             }
         ]);
@@ -88,14 +80,14 @@ function search(terms) {
         .container {
            padding: 10px;
         }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
         .form-group {
             padding-bottom: 20px;
             margin-bottom: 20px;
             border-bottom: 1px dashed black;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
         }
         .meta {
             padding: 10px;

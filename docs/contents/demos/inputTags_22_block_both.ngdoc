@@ -1,35 +1,26 @@
 @ngdoc overview
-@name Basic Usage
+@name Both Blocky
 @description
 
-## Basic usage
+## Both Results and Tags Blocky
 
-Simply provide a `searchFn` to directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
+You can also display all 3 components (tags, input and results) in 3
+consecutive blocks using the [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags)
+directive.
 
-Display:
-- model tags and text input are displayed inline
-- results are displayed as a drop-down under the text input
+> Displaying tags AND results as a block:
 
-Behaviour:
-- no new tags will be added
+With both `display.tags: 'block'` and `display.results: 'block'`, tags, input
+and results are displayed in three consecutive blocks.
 
 <pre>
 $scope.tagOptions = {
-    searchFn: function (terms) { ... }
+    searchFn: mockTagService.search,
+    display: {
+        tags: 'block',
+        results: 'block'
+    }
 };
-</pre>
-
-The `searchFn` will be invoked with the search terms and, as per defaults,
-should return an array of tag objects with `id` and `label` attributes
-(or a promise resolved with the tag list).
-
-<pre>
-function search(terms) {
-    return [
-        {id: 1, label: 'Foo'},
-        {id: 2, label: 'Bar'}
-    ];
-}
 </pre>
 
 <doc:example module="app" height="400">
@@ -79,7 +70,11 @@ function search(terms) {
             function ($scope, mockTagService) {
                 $scope.tags = [];
                 $scope.tagOptions = {
-                    searchFn: mockTagService.search
+                    searchFn: mockTagService.search,
+                    display: {
+                        tags: 'block',
+                        results: 'block'
+                    }
                 };
             }
         ]);
@@ -92,10 +87,6 @@ function search(terms) {
             padding-bottom: 20px;
             margin-bottom: 20px;
             border-bottom: 1px dashed black;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
         }
         .meta {
             padding: 10px;

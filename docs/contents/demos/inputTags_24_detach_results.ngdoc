@@ -1,35 +1,38 @@
 @ngdoc overview
-@name Basic Usage
+@name Detaching Results
 @description
 
-## Basic usage
+## Detaching Results
 
-Simply provide a `searchFn` to directive [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
+If you prefer to display the search results on your own - and have the freedom to
+place it anywhere in your dom - you can force it not display using the
+`display.results: 'hide'` option of the
+[cork-input-tags](#/api/ng.cork.input-tags.corkInputTags) directive and then
+print your own [cork-input-tags-results](#/api/ng.cork.input-tags.corkInputTagsResults).
 
-Display:
-- model tags and text input are displayed inline
-- results are displayed as a drop-down under the text input
+**NOTE:** keyboard navigation between results via up/down arrow keys **is still enabled**
+even if results are detached from input.
 
-Behaviour:
-- no new tags will be added
+> Displaying results on your own / elsewhere in the DOM
+
+With `display.results: 'hide'` - results are not displayed by [cork-input-tags](#/api/ng.cork.input-tags.corkInputTags).
 
 <pre>
 $scope.tagOptions = {
-    searchFn: function (terms) { ... }
+    searchFn: mockTagService.search,
+    display: {
+        results: 'hide'
+    }
 };
 </pre>
 
-The `searchFn` will be invoked with the search terms and, as per defaults,
-should return an array of tag objects with `id` and `label` attributes
-(or a promise resolved with the tag list).
+Print the [cork-input-tags-results](#/api/ng.cork.input-tags.corkInputTagsResults) directive
+and pass the same `corkUuid` to both.
 
 <pre>
-function search(terms) {
-    return [
-        {id: 1, label: 'Foo'},
-        {id: 2, label: 'Bar'}
-    ];
-}
+<div cork-input-tags cork-uuid="example1" cork-options="tagOptions" ng-model="tags"></div>
+....
+<div cork-input-tags-results cork-uuid="example1" cork-options="tagOptions"></div>
 </pre>
 
 <doc:example module="app" height="400">
@@ -79,7 +82,10 @@ function search(terms) {
             function ($scope, mockTagService) {
                 $scope.tags = [];
                 $scope.tagOptions = {
-                    searchFn: mockTagService.search
+                    searchFn: mockTagService.search,
+                    display: {
+                        results: 'hide'
+                    }
                 };
             }
         ]);
@@ -88,27 +94,31 @@ function search(terms) {
         .container {
            padding: 10px;
         }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
         .form-group {
             padding-bottom: 20px;
             margin-bottom: 20px;
             border-bottom: 1px dashed black;
         }
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
         .meta {
-            padding: 10px;
+            padding: 10px 0;
             background: #efefef;
         }
         </style>
         <div data-ng-controller="exampleCtrl" class="container">
             <div class="form-group">
                 <label>Tags (tip: foo, bar, baz, qux)</label>
-                <div cork-input-tags cork-options="tagOptions" ng-model="tags"></div>
+                <div cork-input-tags cork-uuid="example1" cork-options="tagOptions" ng-model="tags"></div>
             </div>
             <div class="meta">
                 <strong>model:</strong> {{tags}}
+            </div>
+            <div class="results">
+                <h3>Result</h3>
+                <div cork-input-tags-results cork-uuid="example1" cork-options="tagOptions"></div>
             </div>
         </div>
     </doc:source>
