@@ -1,5 +1,5 @@
 /**
- * ng.cork.input-tags - v0.0.3 - 2015-04-10
+ * ng.cork.input-tags - v0.0.4 - 2015-04-10
  * https://github.com/cork-labs/ng.cork.input-tags
  *
  * Copyright (c) 2015 Cork Labs <http://cork-labs.org>
@@ -8,23 +8,21 @@
 /**
  * less entry point
  */
+.cork-input-tags .cork-icon {
+  line-height: 2em;
+  width: 2em;
+  text-align: center;
+}
+.cork-input-tags .cork-icon-text {
+  display: none;
+}
 .cork-it-tag {
   display: block;
   overflow: hidden;
   padding: 0.5em;
   line-height: 1em;
 }
-.cork-input-tags-control .cork-icon,
-.cork-input-tags-results .cork-icon {
-  line-height: 2em;
-  width: 2em;
-  text-align: center;
-}
-.cork-input-tags-control .cork-icon-text,
-.cork-input-tags-results .cork-icon-text {
-  display: none;
-}
-.cork-input-tag-model .cork-it-tag {
+.cork-input-tags-tags .cork-it-tag {
   position: relative;
   float: left;
   margin: 0 0.5em 0.5em 0;
@@ -32,24 +30,17 @@
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.cork-input-tag-model .cork-it-tag.cork-is-selected {
+.cork-input-tags-tags .cork-it-tag.cork-is-selected {
   color: white;
   background-color: #598cfc;
 }
-.cork-input-tag-model .cork-it-tag.cork-is-selected.cork-will-delete {
+.cork-input-tags-tags .cork-it-tag.cork-is-selected.cork-will-delete {
   color: white;
   background-color: #fa2e2e;
 }
-.cork-input-tag-model .cork-it-label {
+.cork-input-tags-tags .cork-it-label {
   float: left;
   margin-right: 0.5em;
-}
-.cork-input-tags-control .cork-input-tags-results {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  background-color: #efefef;
 }
 .cork-it-remove-btn {
   float: right;
@@ -71,11 +62,41 @@
 .cork-it-remove-btn:active {
   opacity: 1;
 }
-.cork-it-input-container {
+.cork-input-tags-control {
+  display: block;
+}
+.cork-input-tags-control:before,
+.cork-input-tags-control:after {
+  content: " ";
+  display: table;
+}
+.cork-input-tags-control:after {
+  clear: both;
+}
+.cork-input-tags-control.cork-it-tags-block .cork-it-input-container {
+  clear: both;
+}
+.cork-input-tags-control.cork-it-tags-block .form-control {
+  width: 100%;
+  box-sizing: border-box;
+}
+.cork-input-tags-control.cork-it-tags-inline .cork-it-input-container {
   float: left;
+}
+.cork-input-tags-control.cork-it-results-block {
   position: relative;
 }
-.cork-it-results-container {
+.cork-input-tags-control.cork-it-results-inline .cork-it-input-container {
+  position: relative;
+}
+.cork-input-tags-control .cork-input-tags-results {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  background-color: #ffffff;
+}
+.cork-input-tags-control .cork-it-results-container {
   position: absolute;
   bottom: 0;
   left: 0;

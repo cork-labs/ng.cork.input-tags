@@ -1,21 +1,21 @@
 /**
- * ng.cork.input-tags - v0.0.3 - 2015-04-10
+ * ng.cork.input-tags - v0.0.4 - 2015-04-10
  * https://github.com/cork-labs/ng.cork.input-tags
  *
  * Copyright (c) 2015 Cork Labs <http://cork-labs.org>
  * License: MIT <http://cork-labs.mit-license.org/2015>
  */
 angular.module('ng.cork.input-tags.templates', []).run(['$templateCache', function($templateCache) {
-$templateCache.put("lib/ng.cork.input-tags/control.tpl.html",
-"<ng-form name=form class=cork-input-tags-control ng-class=\"{'cork-is-disabled': disabled}\"><div class=cork-input-tag-model><div class=cork-it-tag ng-repeat=\"tag in model\" ng-class=\"{'cork-is-selected': selIx === $index, 'cork-will-delete': willDelete}\" title=\"Tag '{{tag[opts.attr.label]}}', press backspace to highlight this tag for removal, press left to select previous tag, press right to select next tag, press escape to return to the add tag input.\" ng-focus=onCursorFocus($index) ng-keydown=\"onCursorKeyDown($event, $index)\" ng-keyup=\"onCursorKeyUp($event, $index)\" ng-blur=onCursorBlur($index) cork-ui-focus-on=focus-cursor-{{$index}}><div class=cork-it-label><div class=cork-it-content ng-include=opts.tpl.label></div></div><button class=cork-it-remove-btn title=\"Tag '{{tag[opts.attr.label]}}', press backspace to remove tag, press left to select previous tag, press right to select next tag, press escape to return to the add tag input.\" ng-click=removeTag(tag) ng-focus=onRemoveBtnFocus($index) ng-keydown=\"onRemoveBtnKeyDown($event, $index)\" ng-blur=onRemoveBtnBlur($index) cork-ui-enter-click cork-ui-stop-propagation cork-events=\"['keydown']\" cork-ui-focus-on=focus-remove-btn-{{$index}}><i class=\"cork-icon fa fa-times\"></i> <span class=cork-icon-text>remove</span></button></div></div><div class=cork-it-input-container><input class=form-control ng-model=newLabel placeholder={{opts.placeholder}} ng-focus=onInputFocus() ng-keyup=onInputKeyUp($event) ng-keydown=onInputKeyDown($event) ng-blur=\"onInputBlur()\"><div class=cork-it-results-container><div cork-input-tags-results cork-uuid={{uuid}} cork-options=opts></div></div></div></ng-form>");
-$templateCache.put("lib/ng.cork.input-tags/input.tpl.html",
-"<div class=cork-input-tags-input ng-class=\"{'cork-is-disabled': disabled}\"><div cork-input-tags-control cork-uuid={{uuid}} cork-options=opts ng-model=model></div></div>");
+$templateCache.put("lib/ng.cork.input-tags/inputTags.tpl.html",
+"<ng-form name=form class=\"cork-input-tags cork-input-tags-control\" ng-class=\"{'cork-is-disabled': disabled, 'cork-it-results-block': opts.display.results === 'block', 'cork-it-results-inline': opts.display.results === 'inline', 'cork-it-tags-block': opts.display.tags === 'block', 'cork-it-tags-inline': opts.display.tags === 'inline'}\"><div ng-if=\"opts.display.tags !== 'hide'\" cork-input-tags-tags ng-model=model cork-uuid={{UUID}} cork-options=options cork-disabled=disabled></div><div class=cork-it-input-container><input class=form-control ng-model=newLabel placeholder={{opts.placeholder}} ng-focus=onInputFocus() ng-keyup=onInputKeyUp($event) ng-keydown=\"onInputKeyDown($event)\"><div ng-if=\"opts.display.results !== 'hide'\" class=cork-it-results-container><div cork-input-tags-results cork-uuid={{UUID}} cork-options=opts></div></div></div></ng-form>");
+$templateCache.put("lib/ng.cork.input-tags/inputTagsResults.tpl.html",
+"<div class=\"cork-input-tags cork-input-tags-results\"><div class=cork-it-tag ng-repeat=\"tag in results\" ng-class=\"{'cork-is-selected': selIx === $index}\" ng-click=tagClick(tag)><div class=cork-it-add-icon><i class=\"cork-icon fa fa-plus\"></i> <span class=cork-icon-text>add</span></div><div class=cork-it-label><div class=cork-it-content ng-include=opts.tpl.result></div></div></div></div>");
+$templateCache.put("lib/ng.cork.input-tags/inputTagsTags.tpl.html",
+"<div class=\"cork-input-tags cork-input-tags-tags\"><div class=cork-it-tag ng-repeat=\"tag in model\" ng-class=\"{'cork-is-selected': selIx === $index, 'cork-will-delete': willDelete}\" title=\"Tag '{{tag[opts.attr.label]}}', press backspace to highlight this tag for removal, press left to select previous tag, press right to select next tag, press escape to return to the add tag input.\" ng-focus=onTagFocus($index) ng-keydown=\"onTagKeyDown($event, $index)\" cork-ui-focus-on=corkInputTags.focus-tag-{{$index}}><div class=cork-it-label><div class=cork-it-content ng-include=opts.tpl.label></div></div><button class=cork-it-remove-btn title=\"Tag '{{tag[opts.attr.label]}}', press backspace to remove tag, press left to select previous tag, press right to select next tag, press escape to return to the add tag input.\" ng-click=removeTag(tag) ng-focus=onRemoveBtnFocus($index) ng-keydown=\"onRemoveBtnKeyDown($event, $index)\" ng-blur=onRemoveBtnBlur($index) cork-ui-enter-click cork-ui-stop-propagation cork-events=\"['keydown']\" cork-ui-focus-on=corkInputTags.focus-remove-btn-{{$index}}><i class=\"cork-icon fa fa-times\"></i> <span class=cork-icon-text>remove</span></button></div></div>");
 $templateCache.put("lib/ng.cork.input-tags/label.tpl.html",
 "<div>{{tag[opts.attr.label]}}</div>");
 $templateCache.put("lib/ng.cork.input-tags/result.tpl.html",
 "<div>{{tag[opts.attr.label]}}</div>");
-$templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
-"<div class=cork-input-tags-results><div class=cork-it-tag ng-repeat=\"tag in results\" ng-class=\"{'cork-is-selected': selIx === $index}\" ng-click=tagClick(tag)><div class=cork-it-add-icon><i class=\"cork-icon fa fa-plus\"></i> <span class=cork-icon-text>add</span></div><div class=cork-it-label><div class=cork-it-content ng-include=opts.tpl.result></div></div></div></div>");
 }]);
 
 (function (angular) {
@@ -58,7 +58,7 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
      * @name ng.cork.input-tags.corkInputTagsConfigProvider
      *
      * @description
-     * Allows configuration of {@link ng.cork.input-tags.corkInputTags}, {@link ng.cork.input-tags.corkInputTagsControl} and {@link ng.cork.input-tags.corkInputTagsResults} directives.
+     * Allows configuration of {@link ng.cork.input-tags.corkInputTags}, {@link ng.cork.input-tags.corkInputTags} and {@link ng.cork.input-tags.corkInputTagsResults} directives.
      */
     module.provider('corkInputTagsConfig', [
         'corkDeepExtend',
@@ -69,12 +69,16 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
              * @type {Object} provider configuration.
              */
             var serviceConfig = {
-                minLength: 3,
+                minLength: 2,
                 addFn: noop,
                 searchFn: noop,
                 attr: {
                     id: 'id',
                     label: 'label'
+                },
+                display: {
+                    tags: 'inline',
+                    results: 'inline',
                 },
                 tpl: {
                     label: 'lib/ng.cork.input-tags/label.tpl.html',
@@ -127,53 +131,6 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
      * @name ng.cork.input-tags.corkInputTags
      *
      * @description
-     * Tag input container. Composes the {@link ng.cork.input-tags.corkInputTagsControl} and {@link ng.cork.input-tags.corkInputTagsResults} directives.
-     *
-     * @scope
-     * @restrict A
-     *
-     * @param {object=} corkOptions Override the default options.
-     */
-    module.directive('corkInputTags', [
-        'corkDeepExtend',
-        'corkInputTagsConfig',
-        'cxGenerate',
-        function corkInputTags(corkDeepExtend, corkInputTagsConfig, cxGenerate) {
-
-            return {
-                templateUrl: 'lib/ng.cork.input-tags/input.tpl.html',
-                restrict: 'A',
-                require: 'ngModel',
-                scope: {
-                    options: '=corkOptions',
-                    model: '=ngModel'
-                },
-                link: function ($scope, $element, $attrs) {
-
-                    /**
-                     * @var {string} generate a uuid to connect corkInputTagsControl and corkInputTagsResults directives via pubsub
-                     */
-                    $scope.uuid = cxGenerate.uuid();
-
-                    /**
-                     * @var {object} service configuration
-                     */
-                    var config = corkInputTagsConfig.config;
-
-                    /**
-                     * @var {object} configuration
-                     */
-                    $scope.opts = corkDeepExtend(copy(config), $scope.options || {});
-                }
-            };
-        }
-    ]);
-
-    /**
-     * @ngdoc directive
-     * @name ng.cork.input-tags.corkInputTagsControl
-     *
-     * @description
      * Tag input control
      *
      * @scope
@@ -181,29 +138,29 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
      * @requires ngModel
      *
      * @param {string=} corkUuid Optional UUID.
-     * @param {boolean=} corkDisabled Optional expression to enable/disable the field.
      * @param {object=} corkOptions Override the default options.
+     * @param {boolean=} corkDisabled Optional expression to enable/disable the field.
      */
-    module.directive('corkInputTagsControl', [
-        '$timeout',
+    module.directive('corkInputTags', [
+        'cxGenerate',
         'corkDeepExtend',
         'corkInputTagsConfig',
         'corkPubsub',
         'corkUiKeys',
         'corkThrottling',
-        function corkInputTagsControl($timeout, corkDeepExtend, corkInputTagsConfig, corkPubsub, corkUiKeys, corkThrottling) {
+        function corkInputTags(cxGenerate, corkDeepExtend, corkInputTagsConfig, corkPubsub, corkUiKeys, corkThrottling) {
 
             var preventedKeys = [corkUiKeys.key.Up, corkUiKeys.key.Down, corkUiKeys.key.Enter];
 
             return {
-                templateUrl: 'lib/ng.cork.input-tags/control.tpl.html',
+                templateUrl: 'lib/ng.cork.input-tags/inputTags.tpl.html',
                 restrict: 'A',
                 require: 'ngModel',
                 scope: {
                     model: '=ngModel',
                     uuid: '@corkUuid',
-                    disabled: '=corkDisabled',
-                    options: '=corkOptions'
+                    options: '=corkOptions',
+                    disabled: '=corkDisabled'
                 },
                 link: function ($scope, $element, $attrs, $ngModel) {
 
@@ -221,11 +178,6 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                     var pubSubGuids = [];
 
                     /**
-                     * @var {string} generates a unique event namespace for pubsub from the provided uuid
-                     */
-                    var eventNamespace = 'corkInputTags.' + $scope.uuid;
-
-                    /**
                      * @var {object} default configuration
                      */
                     var config = corkInputTagsConfig.config;
@@ -235,10 +187,7 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                      */
                     var opts = $scope.opts = corkDeepExtend(copy(config), $scope.options || {});
 
-                    $scope.foo = 'bar';
-
-                    console.log($scope.foo);
-                    console.log($scope.options);
+                    $scope.UUID = $scope.uuid || cxGenerate.uuid();
 
                     var optionMinLength = opts.minLength;
                     var optionFnAdd = opts.addFn;
@@ -249,6 +198,11 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                     var optionMaxTags = 0;
                     var optionRestrictToMax = 0;
                     var optionDebounceMs = opts.debounceMs;
+
+                    /**
+                     * @var {string} generates a unique event namespace for pubsub from the provided uuid
+                     */
+                    var eventNamespace = 'corkInputTags.' + $scope.UUID;
 
                     /**
                      * @var {element} cached input reference
@@ -286,29 +240,8 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
 
                     // -- private
 
-                    /**
-                     *
-                     */
-                    function updateSelectedTag(index) {
-                        var length = $scope.model.length;
-                        var lastIndex = length - 1;
-                        // limit to first element
-                        if (index < 0) {
-                            index = length ? 0 : -1;
-                        }
-                        // limit to last element (back to input)
-                        if (index > lastIndex) {
-                            index = -1;
-                        }
-                        $scope.selIx = index;
-                        if (index === -1) {
-                            input[0].focus();
-                        } else {
-                            // give it time for the tags to re-render, fixes issue with tag 0 not being selected after previous tag 0 is deleted
-                            $timeout(function () {
-                                $scope.$broadcast('focus-cursor-' + index);
-                            });
-                        }
+                    function focusInput() {
+                        input[0].focus();
                     }
 
                     /**
@@ -327,34 +260,63 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         $scope.enabled = !$scope.disabled && !$scope.unbound;
                     }
 
+                    function clearResults() {
+                        selectedResultTag = null;
+                        corkPubsub.publish(eventNamespace + '.results.clearResults');
+                    }
+
                     /**
                      * notifies corkInputTagsResults directive to search for "terms"
                      * @param {string} terms
                      */
                     var debouncedSearch = corkThrottling.debounceBoth(function (terms) {
-                        corkPubsub.publish(eventNamespace + '.search', terms);
+                        corkPubsub.publish(eventNamespace + '.results.search', terms);
                     }, optionDebounceMs, true);
 
-                    // -- messaging handlers
+                    // -- message handlers
 
                     /**
-                     * handles the xxx.search event sent from the paired corkInputTagsControl directive
                      * @param {string} eventName
-                     * @param {string} terms
+                     * @param {object} tag
                      */
-                    var handleUpdateSelectedResultsTag = function (eventName, tag) {
+                    var handleOnTagsBlur = function () {
+                        if (opts.display.tags !== 'hide') {
+                            focusInput();
+                        }
+                    };
+
+                    /**
+                     * @param {string} eventName
+                     * @param {object} tag
+                     */
+                    var handleOnRemoveTag = function () {
+                        removeTag();
+                    };
+
+                    /**
+                     * @param {string} eventName
+                     * @param {object} tag
+                     */
+                    var handleOnSelectResult = function (eventName, tag) {
                         selectedResultTag = tag;
                     };
 
-                    var handleResultClicked = function (eventName, tag) {
+                    /**
+                     * @param {string} eventName
+                     * @param {string} terms
+                     */
+                    var handleOnResultClicked = function (eventName, tag) {
                         $scope.addTag(tag);
+                        input[0].focus();
                     };
 
                     /**
-                     * listen for corkInputTagsResults events
+                     * events
                      */
-                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.updateSelectedResultsTag', handleUpdateSelectedResultsTag));
-                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.resultClicked', handleResultClicked));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.tags.onBlur', handleOnTagsBlur));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.tags.onRemoveTag', handleOnRemoveTag));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.results.onSelectResult', handleOnSelectResult));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.results.onResultClicked', handleOnResultClicked));
 
                     // -- public API
 
@@ -368,7 +330,7 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         }
                         $scope.model.push(tag);
                         $scope.newLabel = '';
-                        corkPubsub.publish(eventNamespace + '.clearResults');
+                        clearResults();
                     };
 
                     /**
@@ -395,22 +357,14 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                     };
 
                     /**
-                     *
-                     */
-                    $scope.unselectTag = function () {
-                        $scope.selIx = -1;
-                        $scope.willDelete = false;
-                        input[0].focus();
-                    };
-
-                    /**
                      * removes tag, invoked on ng-click
                      * @param {object} tag
                      */
                     $scope.removeTag = function (tag) {
                         // @todo if (enabled)
                         removeTag(tag);
-                        $scope.unselectTag();
+                        corkPubsub.publish(eventNamespace + '.tags.unselectTags');
+                        input[0].focus();
                     };
 
                     // -- dom handlers
@@ -420,7 +374,7 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                      */
                     $scope.onInputFocus = function ($event) {
                         // @todo optionally show results on focus
-                        $scope.unselectTag();
+                        corkPubsub.publish(eventNamespace + '.tags.unselectTags');
                     };
 
                     /**
@@ -433,14 +387,14 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         if (code === corkUiKeys.key.Down || code === corkUiKeys.key.Up) {
                             $event.preventDefault();
                         }
-                        // Left/Bsckspace
-                        if (input[0].selectionEnd === 0) {
+                        // Left/Backspace
+                        if (input[0].selectionEnd === 0 && opts.display.tags !== 'hide') {
                             if (code === corkUiKeys.key.Left) {
-                                updateSelectedTag($scope.model.length - 1);
+                                corkPubsub.publish(eventNamespace + '.tags.selectLastTag');
                             }
                             if (code === corkUiKeys.key.Backspace) {
-                                updateSelectedTag($scope.model.length - 1);
-                                $scope.$broadcast('focus-remove-btn-' + $scope.selIx);
+                                corkPubsub.publish(eventNamespace + '.tags.selectLastTag');
+                                corkPubsub.publish(eventNamespace + '.tags.focusRemoveButton');
                             }
                         }
                     };
@@ -459,11 +413,11 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         }
                         // Down: selects next available/enabled result (if any)
                         if (code === corkUiKeys.key.Down) {
-                            corkPubsub.publish(eventNamespace + '.nextResult');
+                            corkPubsub.publish(eventNamespace + '.results.nextResult');
                         }
                         // Up: selects previous available/enabled result (if any)
                         else if (code === corkUiKeys.key.Up) {
-                            corkPubsub.publish(eventNamespace + '.previousResult');
+                            corkPubsub.publish(eventNamespace + '.results.previousResult');
                         }
                         // Enter: add tag currently selected (or create a new tag)
                         else if (code === corkUiKeys.key.Enter) {
@@ -477,17 +431,216 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         // Left: select last tag
                     };
 
+                    // -- scope handlers
+
                     /**
-                     * handles blur
+                     * searches for tags when user types at least min characters, clears them if less than min
                      */
-                    $scope.onInputBlur = function () {
-                        // @todo optionally hide results on blur
-                    };
+                    $scope.$watch('newLabel', function (newVal) {
+                        if (newVal && newVal.length >= optionMinLength) {
+                            debouncedSearch(newVal);
+                        } else if (!newVal || newVal.length < optionMinLength) {
+                            clearResults();
+                        }
+                    });
+
+                    /**
+                     * notifies corkInputTagsResults to re-filter out these tags from the result set
+                     * @todo set form validity
+                     * updates the enabled state
+                     */
+                    $scope.$watch('model', function (newVal) {
+
+                        // notify corkInputTagsResults to re-filter
+                        corkPubsub.publish(eventNamespace + '.results.updateExcludeTagIds', $scope.model);
+
+                        // @todo set form validity
+                        if (optionMinTags) {
+                            $scope.form.$setValidity(ERROR.MIN_TAGS, $scope.model.length >= optionMinTags);
+                        }
+                        if (optionMaxTags) {
+                            $scope.form.$setValidity(ERROR.MAX_TAGS, $scope.model.length <= optionMaxTags);
+                        }
+
+                        // enable/disable depending on a valid ng-model
+                        $scope.unbound = !isArray(newVal);
+                        updateEnabled();
+
+                    }, true);
+
+                    /**
+                     * updates the enabled state
+                     */
+                    $scope.$watch('disabled', function () {
+                        updateEnabled();
+                    });
+
+                    /**
+                     * removes DOM and pub/sub listeners when scope is destroyed
+                     */
+                    $scope.$on('$destroy', function () {
+                        corkPubsub.unsubscribeArr(pubSubGuids);
+                    });
+                }
+            };
+        }
+    ]);
+
+    /**
+     * @ngdoc directive
+     * @name ng.cork.input-tags.corkInputTagsTags
+     *
+     * @description
+     * Displays model tags and provides a way to remove them from model.
+     *
+     * @scope
+     * @restrict A
+     * @requires ngModel
+     *
+     * @param {string=} corkUuid Optional UUID.
+     * @param {object=} corkOptions Override the default options.
+     */
+    module.directive('corkInputTagsTags', [
+        '$timeout',
+        'corkDeepExtend',
+        'corkInputTagsConfig',
+        'corkPubsub',
+        'corkUiKeys',
+        function corkInputTagsTags($timeout, corkDeepExtend, corkInputTagsConfig, corkPubsub, corkUiKeys) {
+
+            return {
+                templateUrl: 'lib/ng.cork.input-tags/inputTagsTags.tpl.html',
+                restrict: 'A',
+                require: 'ngModel',
+                scope: {
+                    model: '=ngModel',
+                    uuid: '@corkUuid',
+                    options: '=corkOptions',
+                    disabled: '=corkDisabled',
+                },
+                link: function ($scope, $element, $attrs, $ngModel) {
+
+                    /**
+                     * @var {array} stores pubsub guids for bulk unsubscription on scope destruction
+                     */
+                    var pubSubGuids = [];
+
+                    /**
+                     * @var {string} generates a unique event namespace for pubsub from the provided uuid
+                     */
+                    var eventNamespace = 'corkInputTags.' + $scope.uuid;
+
+                    /**
+                     * @var {object} default configuration
+                     */
+                    var config = corkInputTagsConfig.config;
+
+                    /**
+                     * configuration options
+                     */
+                    var opts = $scope.opts = corkDeepExtend(copy(config), $scope.options || {});
+
+                    var optionFnSearch = opts.searchFn;
+                    var optionAttrId = opts.attr.id;
+                    var optionAttrLabel = opts.attr.label;
+                    var optionTplResult = opts.tpl.result;
+
+                    // -- state
+
+                    // -- scope vars
+
+                    /**
+                     * @var {boolean} true if model is not an array, will force disabled
+                     */
+                    $scope.unbound = false;
+
+                    /**
+                     * @var {boolean} enaled (by provided option OR because not bound) updated on updateEnabled()
+                     */
+                    $scope.enabled = false;
+
+                    /**
+                     * @var {number} index of the tag currently selected in the model tag index (-1) if none
+                     */
+                    $scope.selIx = -1;
+
+                    /**
+                     * @var {boolean} True if focus is on a tag remove button
+                     */
+                    $scope.willDelete = false;
+
+                    // -- private
+
+                    /**
+                     *
+                     */
+                    function updateSelectedTag(index) {
+                        var length = $scope.model && $scope.model.length || 0;
+                        var lastIndex = length - 1;
+                        // limit to first element
+                        if (index < 0) {
+                            index = length ? 0 : -1;
+                        }
+                        // limit to last element (back to input)
+                        if (index > lastIndex) {
+                            index = -1;
+                        }
+                        $scope.selIx = index;
+                        if (index === -1) {
+                            corkPubsub.publish(eventNamespace + '.tags.onBlur');
+                        } else {
+                            // give it time for the tags to re-render, fixes issue with tag 0 not being selected after previous tag 0 is deleted
+                            $timeout(function () {
+                                $scope.$broadcast('corkInputTags.focus-tag-' + index);
+                            });
+                        }
+                    }
+
+                    /**
+                     * updates enabled state
+                     */
+                    function updateEnabled() {
+                        $scope.enabled = !$scope.disabled && !$scope.unbound;
+                    }
+
+                    /**
+                     *
+                     */
+                    function unselectTag() {
+                        $scope.selIx = -1;
+                        $scope.willDelete = false;
+                    }
+
+                    /**
+                     *
+                     */
+                    function selectLastTag() {
+                        if ($scope.model && $scope.model.length) {
+                            $scope.selIx = $scope.model.length - 1;
+                            $scope.$broadcast('corkInputTags.focus-tag-' + $scope.selIx);
+                        }
+                    }
+
+                    /**
+                     *
+                     */
+                    function focusRemoveButton() {
+                        $scope.$broadcast('corkInputTags.focus-remove-btn-' + $scope.selIx);
+                    }
+
+                    /**
+                     * commands
+                     */
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.tags.unselectTags', unselectTag));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.tags.selectLastTag', selectLastTag));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.tags.focusRemoveButton', focusRemoveButton));
+
+                    // -- public
 
                     /**
                      * handles focus on a tag cursor
                      */
-                    $scope.onCursorFocus = function (index) {
+                    $scope.onTagFocus = function (index) {
                         $scope.selIx = index;
                     };
 
@@ -496,17 +649,19 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                      * - Escape: refocus input
                      * - Backspace: select this tag remove btn (if any)
                      * - Left: select previous tag cursor (if any or back to input)
+                     * - Right: select next tag cursor (or back to input)
                      */
-                    $scope.onCursorKeyDown = function ($event, index) {
+                    $scope.onTagKeyDown = function ($event, index) {
                         $event.preventDefault();
                         var code = corkUiKeys.getCode($event);
                         // Escape: refocus input
                         if (code === corkUiKeys.key.Esc) {
-                            $scope.unselectTag();
+                            unselectTag();
+                            corkPubsub.publish(eventNamespace + '.tags.onBlur');
                         }
                         // Backspace: select this tag remove button (if exists)
                         else if (code === corkUiKeys.key.Backspace) {
-                            $scope.$broadcast('focus-remove-btn-' + index);
+                            $scope.$broadcast('corkInputTags.focus-remove-btn-' + index);
                         }
                         // Left: select previous tag cursor (if exists)
                         else if (code === corkUiKeys.key.Left) {
@@ -516,23 +671,6 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         if (code === corkUiKeys.key.Right) {
                             updateSelectedTag($scope.selIx + 1);
                         }
-                    };
-
-                    /**
-                     * handles up/down key presses on a tag cursor
-                     * - Right: select next tag cursor (or back to input)
-                     */
-                    $scope.onCursorKeyUp = function ($event, index) {
-                        $event.preventDefault();
-                        var code = corkUiKeys.getCode($event);
-
-                    };
-
-                    /**
-                     * handles blur from a tag cursor
-                     */
-                    $scope.onCursorBlur = function (index) {
-                        // @todo optionally hide results on blur
                     };
 
                     /**
@@ -554,11 +692,12 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         var code = corkUiKeys.getCode($event);
                         // Escape: refocus input
                         if (code === corkUiKeys.key.Esc) {
-                            $scope.unselectTag();
+                            unselectTag();
+                            corkPubsub.publish(eventNamespace + '.tags.onBlur');
                         }
-                        // Backspace: removes this tag, focus on previous tag cursor
+                        // Backspace: removes this tag, focus on previous tag cursor or input
                         else if (code === corkUiKeys.key.Backspace) {
-                            removeTag($scope.model[$scope.selIx]);
+                            corkPubsub.publish(eventNamespace + '.tags.onRemoveTag', $scope.model[$scope.selIx]);
                             updateSelectedTag($scope.selIx - 1);
                             $scope.willDelete = false;
                         }
@@ -582,7 +721,15 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         $scope.willDelete = false;
                     };
 
-                    // -- scope handlers
+                    // -- scope watches
+
+                    /**
+                     * updates the enabled state
+                     */
+                    $scope.$watch('model', function (newVal) {
+                        $scope.unbound = !isArray(newVal);
+                        updateEnabled();
+                    });
 
                     /**
                      * updates the enabled state
@@ -592,40 +739,7 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                     });
 
                     /**
-                     * updates the displayed tags when model changes
-                     *
-                     * notifies corkInputTagsResults in order to filter out these tags from the result set
-                     */
-                    $scope.$watch('model', function (newVal) {
-                        if (isArray(newVal)) {
-                            // @todo enable
-                        } else {
-                            // @todo disable
-                        }
-                        corkPubsub.publish(eventNamespace + '.updateExcludeTagIds', $scope.model);
-                        if (optionMinTags) {
-                            $scope.form.$setValidity(ERROR.MIN_TAGS, $scope.model.length >= optionMinTags);
-                        }
-                        if (optionMaxTags) {
-                            $scope.form.$setValidity(ERROR.MAX_TAGS, $scope.model.length <= optionMaxTags);
-                        }
-
-                        updateEnabled();
-                    }, true);
-
-                    /**
-                     * searches for tags when user types at least min characters, clears them if less than min
-                     */
-                    $scope.$watch('newLabel', function (newVal) {
-                        if (newVal && newVal.length >= optionMinLength) {
-                            debouncedSearch(newVal);
-                        } else if (!newVal || newVal.length < optionMinLength) {
-                            corkPubsub.publish(eventNamespace + '.clearResults');
-                        }
-                    });
-
-                    /**
-                     * removes DOM and pub/sub listeners when scope is destroyed
+                     * removes listeners when scope is destroyed
                      */
                     $scope.$on('$destroy', function () {
                         corkPubsub.unsubscribeArr(pubSubGuids);
@@ -633,7 +747,7 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                 }
             };
         }
-    ])
+    ]);
 
     /**
      * @ngdoc directive
@@ -648,14 +762,14 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
      * @param {string=} corkUuid Optional UUID.
      * @param {object=} corkOptions Override the default options.
      */
-    .directive('corkInputTagsResults', [
+    module.directive('corkInputTagsResults', [
         'corkDeepExtend',
         'corkInputTagsConfig',
         'corkPubsub',
         function corkInputTagsResults(corkDeepExtend, corkInputTagsConfig, corkPubsub) {
 
             return {
-                templateUrl: 'lib/ng.cork.input-tags/results.tpl.html',
+                templateUrl: 'lib/ng.cork.input-tags/inputTagsResults.tpl.html',
                 restrict: 'A',
                 scope: {
                     uuid: '@corkUuid',
@@ -696,17 +810,12 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                     var rawResults = [];
 
                     /**
-                     * @var tag currently selected (will be unset if tag is no longer visible/enabled)
+                     * @var {object} tag currently selected (will be unset if tag is no longer visible/enabled)
                      */
-                    var selectedResultsTag = null;
+                    var selectedTag = null;
 
                     /**
-                     * @var if of tag currently selected tag (or previously selected tag, enables reinstating it if it becomes visisble/enabled again, e.g., if removed from model)
-                     */
-                    var selelctedResultsTagId = null;
-
-                    /**
-                     * @var {array} list of tags assigned to model in corkInputTagsControl, exclude these from raw results
+                     * @var {array} list of tags assigned to model in corkInputTags, exclude these from raw results
                      */
                     var excludeTagIds = null;
 
@@ -742,28 +851,13 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                     }
 
                     /**
-                     * updates $scope.selIx and selelctedResultsTagId based on desired next index
-                     * notifies paired corkInputTagsControl if selection changes
+                     * updates $scope.selIx based on desired next index
+                     * notifies paired corkInputTags if selection changes
                      *
                      * @param {index} desired next index, pass -1 to revert to search for previously selected id
                      */
                     function updateSelected(index) {
                         var ix;
-                        // restore to a previously selected result id (pass in -1 to trigger the update)
-                        if (index < 0 && selelctedResultsTagId) {
-                            for (ix = 0; ix < $scope.results.length; ix++) {
-                                if (selelctedResultsTagId === $scope.results[ix][optionAttrId]) {
-                                    // found it, update the index, keep the same id
-                                    $scope.selIx = ix;
-                                    // reinstate the tag?
-                                    if (!selectedResultsTag) {
-                                        selectedResultsTag = $scope.results[ix];
-                                        corkPubsub.publish(eventNamespace + '.updateSelectedResultsTag', selectedResultsTag);
-                                    }
-                                    return;
-                                }
-                            }
-                        }
                         // limit to list length
                         if (index + 1 > $scope.results.length) {
                             index = $scope.results.length - 1;
@@ -776,30 +870,28 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                         $scope.selIx = index;
                         // something is selected, update the id
                         if (index >= 0) {
-                            selelctedResultsTagId = $scope.results[index][optionAttrId];
-                            // and update the previously selected tag (if different OR if previously node)
-                            if (!selectedResultsTag || selelctedResultsTagId !== selectedResultsTag.id) {
-                                selectedResultsTag = $scope.results[index];
-                                corkPubsub.publish(eventNamespace + '.updateSelectedResultsTag', selectedResultsTag);
+                            // and update the previously selected tag (if different OR if previously none)
+                            if (!selectedTag) {
+                                selectedTag = $scope.results[index];
+                                corkPubsub.publish(eventNamespace + '.results.onSelectResult', selectedTag);
                             }
                         }
                         // unselect the previously selected tag
-                        // we just keep the id to reinstante it if it shows up in the results
-                        else if (selectedResultsTag) {
-                            selectedResultsTag = null;
-                            corkPubsub.publish(eventNamespace + '.updateSelectedResultsTag', selectedResultsTag);
+                        else if (selectedTag) {
+                            selectedTag = null;
+                            corkPubsub.publish(eventNamespace + '.results.onSelectResult', selectedTag);
                         }
                     }
 
                     // -- messaging handlers
 
                     /**
-                     * handles the xxx.updateExcludeTagIds event sent from the paired corkInputTagsControl directive
+                     * handles the xxx.results.updateExcludeTagIds event sent from the paired corkInputTags directive
                      * @param {string} eventName
                      * @param {object} tags currently in the model, ignore these
                      */
-                    var handleUpdateExcludeTagIds = function (eventName, tags) {
-                        if (tags && tags.length) {
+                    var updateExcludeTagIds = function (eventName, tags) {
+                        if (isArray(tags) && tags.length) {
                             excludeTagIds = [];
                             for (var ix = 0; ix < tags.length; ix++) {
                                 excludeTagIds.push(tags[ix][optionAttrId]);
@@ -827,7 +919,7 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                     };
 
                     /**
-                     * handles the xxx.search event sent from the paired corkInputTagsControl directive
+                     * handles the results.search message sent from the paired corkInputTags directive
                      * @param {string} eventName
                      * @param {string} terms passed into the search fn()
                      */
@@ -843,43 +935,47 @@ $templateCache.put("lib/ng.cork.input-tags/results.tpl.html",
                     };
 
                     /**
-                     * handles the xxx.search event sent from the paired corkInputTagsControl directive
+                     * handles the results.clear message sent from the paired corkInputTags directive
                      */
-                    var handleClear = function () {
+                    var clearResults = function () {
                         rawResults = [];
                         $scope.results = [];
                         updateSelected(-1);
                     };
 
                     /**
-                     * handles the xxx.search event sent from the paired corkInputTagsControl directive
+                     * handles the xxx.search message sent from the paired corkInputTags directive
                      */
-                    var handleNextResult = function () {
+                    var nextResult = function () {
                         updateSelected($scope.selIx + 1);
                     };
 
                     /**
-                     * handles the xxx.previousResult event sent from the paired corkInputTagsControl directive
+                     * handles the xxx.results.previousResult message sent from the paired corkInputTags directive
                      * @param {string} eventName
                      * @param {string} terms
                      */
-                    var handlePreviousResult = function ($ev, terms) {
+                    var previousResult = function ($ev, terms) {
                         updateSelected($scope.selIx - 1);
                     };
 
                     /**
-                     * listen for corkInputTags events
+                     * commands
                      */
-                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.updateExcludeTagIds', handleUpdateExcludeTagIds));
-                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.search', handleSearch));
-                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.clearResults', handleClear));
-                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.nextResult', handleNextResult));
-                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.previousResult', handlePreviousResult));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.results.search', handleSearch));
+
+                    /**
+                     * events
+                     */
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.results.updateExcludeTagIds', updateExcludeTagIds));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.results.clearResults', clearResults));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.results.nextResult', nextResult));
+                    pubSubGuids.push(corkPubsub.subscribe(eventNamespace + '.results.previousResult', previousResult));
 
                     // -- public
 
                     $scope.tagClick = function (tag) {
-                        corkPubsub.publish(eventNamespace + '.resultClicked', $scope.results[$scope.selIx]);
+                        corkPubsub.publish(eventNamespace + '.results.onResultClicked', $scope.results[$scope.selIx]);
                     };
 
                     // -- dom handlers
