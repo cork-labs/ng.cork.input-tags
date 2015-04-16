@@ -1,5 +1,5 @@
 /**
- * ng.cork.input-tags - v0.0.4 - 2015-04-10
+ * ng.cork.input-tags - v0.0.5 - 2015-04-16
  * https://github.com/cork-labs/ng.cork.input-tags
  *
  * Copyright (c) 2015 Cork Labs <http://cork-labs.org>
