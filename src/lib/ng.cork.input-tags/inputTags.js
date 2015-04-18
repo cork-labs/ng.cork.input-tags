@@ -46,7 +46,7 @@
             var provider = this;
 
             /**
-             * @type {Object} provider configuration.
+             * @type {Object} service configuration.
              */
             var serviceConfig = {
                 minLength: 2,
