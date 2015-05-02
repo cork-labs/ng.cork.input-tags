@@ -1,5 +1,5 @@
 /**
- * ng.cork.input-tags - v0.0.5 - 2015-04-16
+ * ng.cork.input-tags - v0.0.6 - 2015-05-03
  * https://github.com/cork-labs/ng.cork.input-tags
  *
  * Copyright (c) 2015 Cork Labs <http://cork-labs.org>
@@ -66,7 +66,7 @@ $templateCache.put("lib/ng.cork.input-tags/result.tpl.html",
             var provider = this;
 
             /**
-             * @type {Object} provider configuration.
+             * @type {Object} service configuration.
              */
             var serviceConfig = {
                 minLength: 2,
