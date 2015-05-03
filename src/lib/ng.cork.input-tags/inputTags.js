@@ -269,8 +269,8 @@
                      * @param {string} eventName
                      * @param {object} tag
                      */
-                    var handleOnRemoveTag = function () {
-                        removeTag();
+                    var handleOnRemoveTag = function (event, tag) {
+                        removeTag(tag);
                     };
 
                     /**
@@ -602,6 +602,13 @@
                     }
 
                     /**
+                     * handles clicks on remove button
+                     */
+                    var removeTag = function (tag) {
+                        corkPubsub.publish(eventNamespace + '.tags.onRemoveTag', tag);
+                    };
+
+                    /**
                      *
                      */
                     function focusRemoveButton() {
@@ -661,6 +668,16 @@
                     };
 
                     /**
+                     * handles clicks on remove button
+                     */
+                    $scope.removeTag = function (tag) {
+                        var index = $scope.model.indexOf(tag);
+                        removeTag(tag);
+                        updateSelectedTag(index);
+                        $scope.willDelete = false;
+                    };
+
+                    /**
                      * handles up/down key presses on a remove button cursor
                      * - Escape: refocus input
                      * - Backspace: remove this tag
@@ -677,7 +694,7 @@
                         }
                         // Backspace: removes this tag, focus on previous tag cursor or input
                         else if (code === corkUiKeys.key.Backspace) {
-                            corkPubsub.publish(eventNamespace + '.tags.onRemoveTag', $scope.model[$scope.selIx]);
+                            removeTag($scope.model[$scope.selIx]);
                             updateSelectedTag($scope.selIx - 1);
                             $scope.willDelete = false;
                         }
