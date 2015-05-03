@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "angular": "~1.3.8",
-    "angular-marked": "~0.0.12",
     "ng.cx.generate": "~0.0.2",
     "ng.cork.throttling": "~0.0.7",
     "ng.cork.pubsub": "~0.0.2",
