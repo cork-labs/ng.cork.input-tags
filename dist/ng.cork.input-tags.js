@@ -1,5 +1,5 @@
 /**
- * ng.cork.input-tags - v0.0.6 - 2015-05-03
+ * ng.cork.input-tags - v0.0.7 - 2015-05-03
  * https://github.com/cork-labs/ng.cork.input-tags
  *
  * Copyright (c) 2015 Cork Labs <http://cork-labs.org>
@@ -289,8 +289,8 @@ $templateCache.put("lib/ng.cork.input-tags/result.tpl.html",
                      * @param {string} eventName
                      * @param {object} tag
                      */
-                    var handleOnRemoveTag = function () {
-                        removeTag();
+                    var handleOnRemoveTag = function (event, tag) {
+                        removeTag(tag);
                     };
 
                     /**
@@ -622,6 +622,13 @@ $templateCache.put("lib/ng.cork.input-tags/result.tpl.html",
                     }
 
                     /**
+                     * handles clicks on remove button
+                     */
+                    var removeTag = function (tag) {
+                        corkPubsub.publish(eventNamespace + '.tags.onRemoveTag', tag);
+                    };
+
+                    /**
                      *
                      */
                     function focusRemoveButton() {
@@ -681,6 +688,16 @@ $templateCache.put("lib/ng.cork.input-tags/result.tpl.html",
                     };
 
                     /**
+                     * handles clicks on remove button
+                     */
+                    $scope.removeTag = function (tag) {
+                        var index = $scope.model.indexOf(tag);
+                        removeTag(tag);
+                        updateSelectedTag(index);
+                        $scope.willDelete = false;
+                    };
+
+                    /**
                      * handles up/down key presses on a remove button cursor
                      * - Escape: refocus input
                      * - Backspace: remove this tag
@@ -697,7 +714,7 @@ $templateCache.put("lib/ng.cork.input-tags/result.tpl.html",
                         }
                         // Backspace: removes this tag, focus on previous tag cursor or input
                         else if (code === corkUiKeys.key.Backspace) {
-                            corkPubsub.publish(eventNamespace + '.tags.onRemoveTag', $scope.model[$scope.selIx]);
+                            removeTag($scope.model[$scope.selIx]);
                             updateSelectedTag($scope.selIx - 1);
                             $scope.willDelete = false;
                         }
